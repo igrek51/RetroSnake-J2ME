@@ -238,7 +238,7 @@ public class RetroSnake extends MIDlet implements CommandListener {
                     }
                 }
             }
-            ai_enabled = false;
+            //ai_enabled = false;
         }
         
         //zmiana kierunku
