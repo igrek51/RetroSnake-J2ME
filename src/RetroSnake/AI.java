@@ -30,7 +30,7 @@ public class AI {
         }
     }
     public int start_x = 0, start_y = 0;
-    public Path last_path = null;
+    public Node last_node = null;
     
     public class Node {
         public Node(int x, int y){
@@ -55,7 +55,7 @@ public class AI {
         }
     };
     
-    public Path find_path(int start_x, int start_y, Vector food){
+    public Node find_path(int start_x, int start_y, Vector food){
         this.start_x = start_x;
         this.start_y = start_y;
         //  ALGORYTM Dijkstry (zmodyfikowany A* - H = 0)
@@ -82,12 +82,16 @@ public class AI {
             //jeśli Q jest węzłem docelowym
             if(is_destination(Q, food)){
                 //znaleziono najkrótszą ścieżkę
-                Path sciezka;
                 //jeśli punkt docelowy jest punktem startowym - brak ścieżki
                 if(start_x==Q.x && start_y==Q.y){
-                    sciezka = null;
+                    return null;
                 }else{
+                    while(Q.parent!=null && Q.parent.parent!=null){
+                        Q = Q.parent;
+                    }
+                    return Q;
                     //Zapisujemy ścieżkę. Krocząc w kierunku od pola docelowego do startowego, przeskakujemy z kolejnych pól na im przypisane pola rodziców, aż do osiągnięcia pola startowego.
+                    /*
                     sciezka = new Path();
                     while(Q!=null){
                         int[] point = new int [2];
@@ -96,8 +100,8 @@ public class AI {
                         sciezka.points.insertElementAt(point, 0); //dopisanie na początek (odwrócenie listy)
                         Q = Q.parent;
                     }
+                    */
                 }
-                return sciezka;
             }
             //Aktualne pole przesuwamy do Listy Zamkniętych.
             o_list.removeElementAt(min_f_i);

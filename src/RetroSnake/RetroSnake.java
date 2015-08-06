@@ -145,7 +145,7 @@ public class RetroSnake extends MIDlet implements CommandListener {
         g.drawString("Prędkość: "+Config.timer_period+" ms", 0, 16, Graphics.TOP|Graphics.LEFT);
         g.drawString("Czas: "+((float)(System.currentTimeMillis()-start_time))/1000+" s", 0, 32, Graphics.TOP|Graphics.LEFT);
         if(Config.ai_enabled){
-            g.drawString("Sztuczna inteligencja: włączona", 0, 48, Graphics.TOP|Graphics.LEFT);
+            g.drawString("[Sztuczna inteligencja]", 0, 48, Graphics.TOP|Graphics.LEFT);
         }
         String kolejka = "";
         if(pause&&kierunki_bufor.size()>0){
@@ -163,9 +163,6 @@ public class RetroSnake extends MIDlet implements CommandListener {
         Paint.draw_score(g, score);
         g.drawString("Prędkość: "+Config.timer_period+" ms", 0, 16, Graphics.TOP|Graphics.LEFT);
         g.drawString("Czas: "+((float)(end_time-start_time))/1000+" s", 0, 32, Graphics.TOP|Graphics.LEFT);
-        if(Config.ai_enabled){
-            g.drawString("Sztuczna inteligencja: włączona", 0, 48, Graphics.TOP|Graphics.LEFT);
-        }
         g.setFont(font_mono);
         g.setColor(Config.Color.game_over);
         g.drawString("Koniec gry",Config.screen_w/2,Config.screen_h/2,Graphics.TOP|Graphics.HCENTER);
@@ -220,14 +217,11 @@ public class RetroSnake extends MIDlet implements CommandListener {
             ai_engine.refresh_map(snake);
             if(food.size()>0){
                 SnakeCell snake_head = (SnakeCell)snake.firstElement();
-                ai_engine.last_path = ai_engine.find_path(snake_head.x, snake_head.y, food);
-                if(ai_engine.last_path!=null){
-                    if(ai_engine.last_path.length() >= 1){
-                        int[] point2 = (int[])ai_engine.last_path.points.elementAt(1);
-                        kierunki_bufor.removeAllElements();
-                        int dir = Direction.points_to_direction(snake_head.x, snake_head.y, point2[0], point2[1], Config.map_w, Config.map_h, Config.Menu.map_open);
-                        kierunki_bufor.addElement(new Integer(dir));
-                    }
+                ai_engine.last_node = ai_engine.find_path(snake_head.x, snake_head.y, food);
+                if(ai_engine.last_node!=null){
+                    kierunki_bufor.removeAllElements();
+                    int dir = Direction.points_to_direction(snake_head.x, snake_head.y, ai_engine.last_node.x, ai_engine.last_node.y, Config.map_w, Config.map_h, Config.Menu.map_open);
+                    kierunki_bufor.addElement(new Integer(dir));
                 }
             }
         }
