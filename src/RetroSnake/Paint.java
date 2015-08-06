@@ -80,7 +80,7 @@ public class Paint {
     static void draw_score(Graphics g, int score){
         g.setColor(Config.Color.stats);
         g.setFont(font_mono);
-        g.drawString("Punkty: "+score+"/"+(Config.map_w*Config.map_h), 0, 0, Graphics.TOP|Graphics.LEFT);
+        g.drawString("Długość: "+score+"/"+(Config.map_w*Config.map_h), 0, 0, Graphics.TOP|Graphics.LEFT);
     }
     static void start_arrows(Graphics g){
         //strzałki do rozpoczęcia gry
