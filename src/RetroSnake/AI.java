@@ -37,6 +37,7 @@ public class AI {
         this.end_x = end_x;
         this.end_y = end_y;
     }
+    public Path last_path = null;
     
     public class Node {
         public Node(int x, int y){
@@ -137,7 +138,7 @@ public class AI {
                         s_y = 0;
                 }
                 //jeśli NIE-MOŻNA go przejść, ignorujemy je.
-                if(map[s_y][s_x]==false)
+                if(map[s_x][s_y]==false)
                     continue;
                 //jeśli pole sąsiada jest już na Liście Zamkniętych
                 if(find_in_list(c_list,s_x,s_y)!=null)
@@ -183,8 +184,12 @@ public class AI {
         return 1 + item.parent.g;
     }
     int policz_h(Node item){
-        //metryka miejska zmodyfikowana o zawiajanie mapy
-        return (Math.abs(item.x - end_x) + Math.abs(item.y - end_y))/2;
+        if(map_open){
+            //metryka miejska zmodyfikowana o zawiajanie mapy
+            return (Math.abs(item.x - end_x) + Math.abs(item.y - end_y))/2;
+        }else{
+            return Math.abs(item.x - end_x) + Math.abs(item.y - end_y);
+        }
     }
     
 }
