@@ -30,13 +30,6 @@ public class AI {
         }
     }
     public int start_x = 0, start_y = 0;
-    public int end_x = 0, end_y = 0;
-    void set_xy(int start_x, int start_y, int end_x, int end_y){
-        this.start_x = start_x;
-        this.start_y = start_y;
-        this.end_x = end_x;
-        this.end_y = end_y;
-    }
     public Path last_path = null;
     
     public class Node {
@@ -44,13 +37,11 @@ public class AI {
             this.x = x;
             this.y = y;
             g = 0;
-            f = 0;
             parent = null;
         }
         int x;
         int y;
         int g; /// odległość od startu po wyznaczonej drodze
-        int f; /// suma g+h (heurystyki) - całkowita oszacowana droga od startu do mety
         Node parent; /// wskaźnik na węzeł będący rodzicem (lub NULL)
     }
 
@@ -64,8 +55,11 @@ public class AI {
         }
     };
     
-    public Path find_path(){
-        //  ALGORYTM A-STAR
+    public Path find_path(int start_x, int start_y, Vector food){
+        this.start_x = start_x;
+        this.start_y = start_y;
+        //  ALGORYTM Dijkstry (zmodyfikowany A* - H = 0)
+        if(food.isEmpty()) return null;
         //zmienne pomocnicze
         Vector o_list = new Vector(); //lista otwartych
         Vector c_list = new Vector(); //lista zamkniętych
@@ -81,16 +75,16 @@ public class AI {
             //Szukamy pola o najniższej wartości F na Liście Otwartych. Czynimy je aktualnym polem - Q.
             min_f_i = 0; //indeks minimum
             for(int i=1; i<o_list.size(); i++){
-                if(((Node)o_list.elementAt(i)).f < ((Node)o_list.elementAt(min_f_i)).f)
+                if(((Node)o_list.elementAt(i)).g < ((Node)o_list.elementAt(min_f_i)).g)
                     min_f_i = i; //nowe minimum
             }
             Q = ((Node)o_list.elementAt(min_f_i));
             //jeśli Q jest węzłem docelowym
-            if(Q.x==end_x && Q.y==end_y){
+            if(is_destination(Q, food)){
                 //znaleziono najkrótszą ścieżkę
                 Path sciezka;
                 //jeśli punkt docelowy jest punktem startowym - brak ścieżki
-                if(start_x==end_x && start_y==end_y){
+                if(start_x==Q.x && start_y==Q.y){
                     sciezka = null;
                 }else{
                     //Zapisujemy ścieżkę. Krocząc w kierunku od pola docelowego do startowego, przeskakujemy z kolejnych pól na im przypisane pola rodziców, aż do osiągnięcia pola startowego.
@@ -153,7 +147,6 @@ public class AI {
                     sasiad.parent = Q;
                     //i zapisujemy sasiada wartości F, G i H. (F = G + H)
                     sasiad.g = policz_g(sasiad);
-                    sasiad.f = sasiad.g + policz_h(sasiad);
                 }else{
                     //jeśli pole było na liście otwartych
                     //sprawdzamy czy aktualna ścieżka do tego pola (sasiad) (prowadząca przez Q) jest krótsza, poprzez porównanie sasiada wartości G dla starej i aktualnej ścieżki. Mniejsza wartość G oznacza, że ścieżka jest krótsza.
@@ -162,13 +155,21 @@ public class AI {
                         //Jeśli tak, zmieniamy przypisanie "pole rodzica" na aktualne pole (Q) i przeliczamy wartości G i F dla pola (sasiad). Jeśli wasza Lista Otwartych jest posortowana pod kątem wartości F, trzeba ją ponownie przesortować po wprowadzonej zmianie.
                         sasiad.parent = Q;
                         sasiad.g = nowe_g;
-                        sasiad.f = nowe_g + policz_h(sasiad);
                     }
                 }
             }
         }
         //Lista Otwartych jest pusta. nie znaleziono pola docelowego, a ścieżka nie istnieje.
         return null;
+    }
+    
+    public boolean is_destination(Node Q, Vector food){
+        for(int i=0; i<food.size(); i++){
+            FoodCell compare = ((FoodCell)food.elementAt(i));
+            if(compare.x==Q.x && compare.y==Q.y)
+                return true;
+        }
+        return false;
     }
 
     Node find_in_list(Vector list, int x, int y){
@@ -182,14 +183,6 @@ public class AI {
 
     int policz_g(Node item){
         return 1 + item.parent.g;
-    }
-    int policz_h(Node item){
-        if(map_open){
-            //metryka miejska zmodyfikowana o zawiajanie mapy
-            return (Math.abs(item.x - end_x) + Math.abs(item.y - end_y))/2;
-        }else{
-            return Math.abs(item.x - end_x) + Math.abs(item.y - end_y);
-        }
     }
     
 }

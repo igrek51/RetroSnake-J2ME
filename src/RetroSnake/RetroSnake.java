@@ -23,7 +23,6 @@ public class RetroSnake extends MIDlet implements CommandListener {
     long start_time = 0;
     long end_time = 0;
     int max_food = 0, max_food_target = 0;
-    boolean ai_enabled = false;
     AI ai_engine = null;
     //timery
     class MyTimerTask extends TimerTask {
@@ -112,12 +111,7 @@ public class RetroSnake extends MIDlet implements CommandListener {
                 }else if(keyCode==Config.KEY_R) back_to_menu();
                 else if(keyCode==Config.KEY_L || keyCode==Config.KEY_BACKSPACE) kierunki_bufor.removeAllElements();
                 else if(keyCode==Config.KEY_M||keyCode==Config.KEY_5) pause = !pause;
-                
-                else if(keyCode==Config.KEY_9){
-                    ai_enabled = !ai_enabled;
-                    System.out.println("AI enabled: "+ai_enabled);
-                }
-                
+                else if(keyCode==Config.KEY_POUND) Config.ai_enabled = !Config.ai_enabled;
             }else if(stan==3){ //game_over
                 if(keyCode==Config.KEY_M||keyCode==Config.KEY_5) new_game();
                 else if(keyCode==Config.KEY_R) back_to_menu();
@@ -150,6 +144,9 @@ public class RetroSnake extends MIDlet implements CommandListener {
         Paint.draw_score(g, score);
         g.drawString("Prędkość: "+Config.timer_period+" ms", 0, 16, Graphics.TOP|Graphics.LEFT);
         g.drawString("Czas: "+((float)(System.currentTimeMillis()-start_time))/1000+" s", 0, 32, Graphics.TOP|Graphics.LEFT);
+        if(Config.ai_enabled){
+            g.drawString("Sztuczna inteligencja: włączona", 0, 48, Graphics.TOP|Graphics.LEFT);
+        }
         String kolejka = "";
         if(pause&&kierunki_bufor.size()>0){
             kolejka = "Czyść ("+kierunki_bufor.size()+")";
@@ -166,6 +163,9 @@ public class RetroSnake extends MIDlet implements CommandListener {
         Paint.draw_score(g, score);
         g.drawString("Prędkość: "+Config.timer_period+" ms", 0, 16, Graphics.TOP|Graphics.LEFT);
         g.drawString("Czas: "+((float)(end_time-start_time))/1000+" s", 0, 32, Graphics.TOP|Graphics.LEFT);
+        if(Config.ai_enabled){
+            g.drawString("Sztuczna inteligencja: włączona", 0, 48, Graphics.TOP|Graphics.LEFT);
+        }
         g.setFont(font_mono);
         g.setColor(Config.Color.game_over);
         g.drawString("Koniec gry",Config.screen_w/2,Config.screen_h/2,Graphics.TOP|Graphics.HCENTER);
@@ -215,32 +215,22 @@ public class RetroSnake extends MIDlet implements CommandListener {
     void game_logic(){
         if(pause) return;
         logic_cycles++;
-        
-        if(ai_enabled){
+        //sztuczna inteligencja
+        if(Config.ai_enabled){
             ai_engine.refresh_map(snake);
-            
             if(food.size()>0){
-            SnakeCell snake_head = (SnakeCell)snake.firstElement();
-                FoodCell food_dest = (FoodCell)food.firstElement();
-                ai_engine.set_xy(snake_head.x, snake_head.y, food_dest.x, food_dest.y);
-                System.out.println("Szukam...");
-                ai_engine.last_path = ai_engine.find_path();
-                System.out.println("Koniec szukania.");
+                SnakeCell snake_head = (SnakeCell)snake.firstElement();
+                ai_engine.last_path = ai_engine.find_path(snake_head.x, snake_head.y, food);
                 if(ai_engine.last_path!=null){
-                    System.out.println("Znalazłem.");
                     if(ai_engine.last_path.length() >= 1){
                         int[] point2 = (int[])ai_engine.last_path.points.elementAt(1);
-                        System.out.println("point1: "+snake_head.x+", "+snake_head.y);
-                        System.out.println("point2: "+point2[0]+", "+point2[1]);
                         kierunki_bufor.removeAllElements();
                         int dir = Direction.points_to_direction(snake_head.x, snake_head.y, point2[0], point2[1], Config.map_w, Config.map_h, Config.Menu.map_open);
                         kierunki_bufor.addElement(new Integer(dir));
                     }
                 }
             }
-            //ai_enabled = false;
         }
-        
         //zmiana kierunku
         if(kierunki_bufor.size()>0){
             //odczytanie kierunku z bufora
@@ -417,7 +407,9 @@ public class RetroSnake extends MIDlet implements CommandListener {
                 if(Config.Menu.map_h<2) Config.Menu.map_h = 2;
                 Config.refresh();
             }
-        }else if(menu_nr==9){
+        }else if(menu_nr==9){ //sztuczna inteligencja
+            Config.ai_enabled = !Config.ai_enabled;
+        }else if(menu_nr==10){
             if(action==0) exit();
         }
     }

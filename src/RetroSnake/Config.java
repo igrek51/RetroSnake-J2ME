@@ -20,6 +20,7 @@ public class Config {
     }
     static int screen_w = 0;
     static int screen_h = 0;
+    static boolean ai_enabled = false;
     //wartości wynikowe
     static void refresh(){
         view_cell = Menu.view_cell; //rozmiar pola w pikselach na ekranie
@@ -55,9 +56,9 @@ public class Config {
     static int arrowsD = 0;
     static int arrowsL = 0;
     //menu
-    static final int menu_max = 10; //liczba elementów menu
+    static final int menu_max = 11; //liczba elementów menu
     static final int menu_0 = 100; //[px]
-    static final int menu_step = 18; //[px]
+    static final int menu_step = 17; //[px]
     //kolory
     public class Color {
         static final int background = 0x9cc283;
