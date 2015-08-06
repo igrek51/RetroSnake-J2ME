@@ -1,0 +1,9 @@
+MIDlet-1: RetroSnake,,RetroSnake.RetroSnake
+MIDlet-Jar-Size: 11139
+MIDlet-Jar-URL: RetroSnake.jar
+MIDlet-Name: RetroSnake
+MIDlet-Vendor: Igrek
+MIDlet-Version: 1.3.6
+MicroEdition-Configuration: CLDC-1.1
+MicroEdition-Profile: MIDP-2.0
+Nokia-MIDlet-No-Exit: true
