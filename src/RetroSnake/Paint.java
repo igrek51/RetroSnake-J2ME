@@ -127,7 +127,7 @@ public class Paint {
         draw_y += Config.menu_step;
         g.drawString("Wysokość mapy: "+Config.Menu.map_h,Config.screen_w/2,draw_y,Graphics.TOP|Graphics.HCENTER);
         draw_y += Config.menu_step;
-        g.drawString("Sztuczna inteligencja: "+(Config.ai_enabled?"włączona":"wyłączona"),Config.screen_w/2,draw_y,Graphics.TOP|Graphics.HCENTER);
+        g.drawString("AI: "+(Config.ai_enabled?"włączona":"wyłączona"),Config.screen_w/2,draw_y,Graphics.TOP|Graphics.HCENTER);
         draw_y += Config.menu_step;
         g.drawString("Wyjście",Config.screen_w/2,draw_y,Graphics.TOP|Graphics.HCENTER);
         Paint.quick_menu(g, "", "OK", "Wyjdź");
