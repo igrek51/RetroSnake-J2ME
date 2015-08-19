@@ -47,7 +47,7 @@ public class RetroSnake extends MIDlet implements CommandListener {
         Config.refresh();
         timer1 = new Timer();
         timer1_task = new MyTimerTask();
-        timer1.scheduleAtFixedRate(timer1_task, 0, Config.timer_period_menu);
+        timer1.schedule(timer1_task, 0, Config.timer_period_menu);
         r = new Random();
         display.setCurrent(canvas);
     }
@@ -181,7 +181,7 @@ public class RetroSnake extends MIDlet implements CommandListener {
         timer1.cancel();
         timer1 = new Timer();
         timer1_task = new MyTimerTask();
-        timer1.scheduleAtFixedRate(timer1_task, 0, Config.timer_period);
+        timer1.schedule(timer1_task, 0, Config.timer_period);
         //inicjalizacja
         snake.addElement(new SnakeCell());
         pause = false;
@@ -295,7 +295,7 @@ public class RetroSnake extends MIDlet implements CommandListener {
                     timer1.cancel();
                     timer1 = new Timer();
                     timer1_task = new MyTimerTask();
-                    timer1.scheduleAtFixedRate(timer1_task, Config.timer_period, Config.timer_period);
+                    timer1.schedule(timer1_task, Config.timer_period, Config.timer_period);
                 }
                 break;
             }
@@ -424,7 +424,7 @@ public class RetroSnake extends MIDlet implements CommandListener {
         timer1.cancel();
         timer1 = new Timer();
         timer1_task = new MyTimerTask();
-        timer1.scheduleAtFixedRate(timer1_task, 0, Config.timer_period_menu);
+        timer1.schedule(timer1_task, 0, Config.timer_period_menu);
     }
     
     void error_out(Exception ex){
