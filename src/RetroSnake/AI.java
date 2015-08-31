@@ -32,6 +32,11 @@ public class AI {
     public int start_x = 0, start_y = 0;
     public Node last_node = null;
     
+    public int AI_move_2(int start_x, int start_y, Vector food){
+        return 0;
+    }
+    
+    
     public class Node {
         public Node(int x, int y){
             this.x = x;
